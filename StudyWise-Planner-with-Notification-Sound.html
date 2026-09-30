@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StudyWise – AI-Based Personalized Study Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f2ef;--card:#fff;--ink:#14211b;--mut:#5a6a62;--brand:#1a8f68;--lime:#93c952;--tint:#d5f5e9;--line:#e2ded9;--warn:#c9483f;--warnbg:#fbe9e7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1613;--card:#16221d;--ink:#e6f0ea;--mut:#9bafa5;--tint:#1b3a2f;--line:#28382f;--warnbg:#3a1f1c;--brand:#3fbf92}}
+:root[data-theme="dark"]{--bg:#0e1613;--card:#16221d;--ink:#e6f0ea;--mut:#9bafa5;--tint:#1b3a2f;--line:#28382f;--warnbg:#3a1f1c;--brand:#3fbf92}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.02em}
+.logo b{color:var(--brand)}
+header a{color:var(--mut);text-decoration:none;font-size:15px;margin-left:20px}
+.hero{padding:40px 0 28px;max-width:820px}
+h1{font-size:clamp(32px,5.4vw,54px);text-wrap:balance;line-height:1.04;letter-spacing:-.035em;margin:0 0 16px;font-weight:700}
+.hero p{font-size:19px;color:var(--mut);margin:0 0 22px;max-width:60ch}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:500;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:6px 12px;font-size:14px}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:8px 0 36px}
+.feat div{padding:16px 18px 16px 0}
+.feat b{display:block;font-size:15px}
+.feat span{font-size:14px;color:var(--mut)}
+.app{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;padding-bottom:40px}
+@media(max-width:860px){.app{grid-template-columns:1fr}.feat{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.feat{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:20px}
+h2{font-size:20px;margin:0 0 14px;letter-spacing:-.01em}
+h3{font-size:15px;margin:18px 0 8px}
+label{display:block;font-size:14px;color:var(--mut);margin:10px 0 4px}
+input,select{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stat b{font-size:26px;display:block;letter-spacing:-.02em}
+.stat span{font-size:13px;color:var(--mut)}
+.today{border-left:6px solid var(--brand)}
+.task{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.task:first-of-type{border-top:0}
+.task input{width:22px;height:22px;flex:none;accent-color:var(--brand)}
+.task.done .t{text-decoration:line-through;color:var(--mut)}
+.task .t{flex:1}.task small{display:block;color:var(--mut)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.hrs{font-weight:700;white-space:nowrap}
+.days{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.day{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+.day.now{border-color:var(--brand);background:var(--tint)}
+.day h4{margin:0 0 6px;font-size:13px;color:var(--mut);font-weight:500}
+.day div{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px}
+.nm{display:flex;align-items:center;gap:6px;min-width:0}.nm em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.day b{white-space:nowrap}
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--lime))}
+.subj{padding:12px 0;border-top:1px solid var(--line)}
+.subj:first-of-type{border-top:0}
+.subj .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.subj small{color:var(--mut)}
+.x{background:none;border:0;color:var(--mut);cursor:pointer;font-size:18px;padding:0 4px}
+.warn{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:12px 14px;margin-bottom:20px;font-size:15px}
+.empty{color:var(--mut);padding:8px 0}
+.toast{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:10px;max-width:320px;display:none;z-index:9}
+.chk{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:14px}
+.chk input{width:auto}
+.srow{border:1px solid var(--line);border-radius:10px;padding:4px 12px 12px;margin-bottom:12px}
+.srow .rh{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+footer{color:var(--mut);font-size:13px;padding:10px 0 40px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">Study<b>Wise</b></div><nav><a href="#planner">Planner</a><a href="#how">How it works</a></nav></header>
+
+<section class="hero">
+<h1>Study smarter, not harder.</h1>
+<p>Tell StudyWise your subjects, exam dates and daily hours. It builds a timetable that puts difficult, urgent subjects first, and rebuilds it as you make progress.</p>
+<a class="btn" href="#planner">Build my timetable</a>
+</section>
+
+<section class="feat" id="how">
+<div><b>Personalized timetable</b><span>A different plan for every student</span></div>
+<div><b>Subject prioritization</b><span>Hard and high-stakes subjects first</span></div>
+<div><b>Daily study goals</b><span>Achievable targets each day</span></div>
+<div><b>Notifications and sound</b><span>A pop-up and chime when it is time to study</span></div>
+<div><b>Progress tracking</b><span>See hours done per subject</span></div>
+<div><b>Dynamic updates</b><span>Plan adjusts when things change</span></div>
+</section>
+
+<main class="app" id="planner">
+<aside>
+<div class="card">
+<h2>Your details</h2>
+<label for="hours">Available study hours per day</label>
+<input id="hours" type="number" min="0.5" max="16" step="0.5">
+<h3>Subjects</h3>
+<form id="f" onsubmit="return false">
+<div id="rows"></div>
+<button class="btn ghost sm" id="more" type="button">+ Add another subject</button>
+<div style="margin-top:16px"><button class="btn" id="submit" type="button">Submit</button> <button class="btn ghost sm" id="sample" type="button">Try sample</button> <button class="btn ghost sm" id="reset" type="button">Clear all</button></div>
+</form>
+</div>
+<div class="card">
+<h2>Reminder, notification &amp; sound</h2>
+<label for="rt">Alert me daily at</label>
+<input id="rt" type="time">
+<label class="chk"><input id="ron" type="checkbox"> Turn alerts on</label>
+<label class="chk"><input id="snd" type="checkbox"> Play sound</label>
+<div style="margin-top:12px"><button class="btn ghost sm" id="test" type="button">Test alert</button></div>
+<p class="empty" id="nstat" style="font-size:13px;margin:8px 0 0"></p>
+</div>
+</aside>
+
+<section>
+<div id="warn"></div>
+<div class="stats" id="stats"></div>
+<div class="card today"><h2>Today's study goals</h2><div id="today"></div></div>
+<div class="card"><h2>Timetable</h2><div class="days" id="days"></div></div>
+<div class="card"><h2>Progress by subject</h2><div id="prog"></div></div>
+</section>
+</main>
+<footer>Your plan is saved in this browser. Plans rebuild automatically whenever you change hours, subjects or tick off sessions.</footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const COL=['#1a8f68','#e0892f','#4a7bd6','#c2508f','#7d5fd1','#2a9fb0'];
+const $=s=>document.querySelector(s);
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const addD=n=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d};
+const today=()=>iso(new Date());
+const dd=(a,b)=>Math.round((new Date(b+'T12:00')-new Date(a+'T12:00'))/864e5);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const need=s=>s.h>0?s.h:4+2*s.d+s.topics.length;
+const doneH=id=>S.log.filter(l=>l.sid===id).reduce((a,l)=>a+l.h,0);
+const fmt=h=>(Math.round(h*10)/10)+'h';
+function blank(){return{hours:4,remind:'18:00',remOn:false,sound:true,lastFired:'',log:[],subjects:[]}}
+function seed(){return{hours:4,remind:'18:00',remOn:false,sound:true,lastFired:'',log:[],subjects:[
+{id:1,name:'Mathematics',exam:iso(addD(9)),d:5,topics:['Integration','Probability']},
+{id:2,name:'Physics',exam:iso(addD(6)),d:4,topics:['Optics']},
+{id:3,name:'English',exam:iso(addD(12)),d:2,topics:[]}]}}
+let S;
+try{const r=localStorage.getItem('studywise2');S=r?JSON.parse(r):blank()}catch(e){S=blank()}
+function save(){try{localStorage.setItem('studywise2',JSON.stringify(S))}catch(e){}}
+const colorOf=id=>COL[Math.max(0,S.subjects.findIndex(s=>s.id===id))%COL.length];
+const nameOf=id=>(S.subjects.find(s=>s.id===id)||{name:'?'}).name;
+
+function plan(){
+  const t=today(),rem={},cnt={};
+  S.subjects.forEach(s=>{rem[s.id]=Math.max(0,need(s)-doneH(s.id));cnt[s.id]=S.log.filter(l=>l.sid===s.id).length});
+  const last=Math.max(0,...S.subjects.map(s=>dd(t,s.exam)));
+  const n=Math.min(180,last),out=[];
+  for(let i=0;i<n;i++){
+    const date=iso(addD(i)),items=[];let cap=S.hours;
+    if(i===0)S.log.filter(l=>l.date===t).forEach(l=>{items.push({sid:l.sid,h:l.h,done:true,lid:l.id});cap-=l.h});
+    const blocks={};let room=cap;
+    S.subjects.filter(x=>dd(date,x.exam)>=1&&rem[x.id]>0)
+      .map(x=>({x,rate:rem[x.id]/dd(date,x.exam)}))
+      .sort((p,q)=>(q.rate+q.x.d*0.01)-(p.rate+p.x.d*0.01))
+      .forEach(a=>{const h=Math.min(rem[a.x.id],Math.ceil(a.rate*2)/2,Math.floor(room*2)/2);
+        if(h>0){blocks[a.x.id]=h;rem[a.x.id]-=h;room-=h}});
+    Object.keys(blocks).forEach(k=>{const s=S.subjects.find(x=>x.id==k);
+      const focus=dd(date,s.exam)===1?'Final revision':(s.topics.length?s.topics[cnt[s.id]%s.topics.length]:'');
+      cnt[s.id]++;items.push({sid:s.id,h:blocks[k],done:false,focus})});
+    out.push({date,i,items});
+  }
+  const risk=S.subjects.filter(s=>rem[s.id]>0.4&&dd(t,s.exam)>=1);
+  return{days:out,risk};
+}
+function render(){
+  const P=plan(),t=today();
+  $('#rt').value=S.remind;$('#ron').checked=S.remOn;$('#snd').checked=S.sound!==false;
+  $('#warn').innerHTML=P.risk.length?'<div class="warn"><b>Not enough time for '+P.risk.map(s=>esc(s.name)).join(', ')+'.</b> Add more daily hours or move exam dates so everything fits.</div>':'';
+  const td=P.days[0]?P.days[0].items:[];
+  const goal=td.reduce((a,x)=>a+x.h,0),dn=td.filter(x=>x.done).reduce((a,x)=>a+x.h,0);
+  const next=S.subjects.map(s=>dd(t,s.exam)).filter(x=>x>=0).sort((a,b)=>a-b)[0];
+  $('#stats').innerHTML='<div class="stat"><b>'+fmt(goal)+'</b><span>Today\'s goal</span></div><div class="stat"><b>'+fmt(dn)+'</b><span>Done today</span></div><div class="stat"><b>'+(next===undefined?'–':next+'d')+'</b><span>Until next exam</span></div>';
+  $('#today').innerHTML=td.length?td.map((x,k)=>'<div class="task'+(x.done?' done':'')+'"><input type="checkbox" aria-label="Mark done" data-k="'+k+'"'+(x.done?' checked':'')+'><span class="dot" style="background:'+colorOf(x.sid)+'"></span><div class="t">'+esc(nameOf(x.sid))+(x.focus?'<small>Focus: '+esc(x.focus)+'</small>':'')+'</div><span class="hrs">'+fmt(x.h)+'</span></div>').join(''):'<div class="empty">Nothing planned today. Add a subject with an upcoming exam date.</div>';
+  $('#today').querySelectorAll('input').forEach(c=>c.onchange=()=>toggle(td[c.dataset.k]));
+  const shown=P.days.slice(0,14);
+  $('#days').innerHTML=P.days.length?shown.map(d=>{const dt=new Date(d.date+'T12:00');
+    return '<div class="day'+(d.i===0?' now':'')+'"><h4>'+(d.i===0?'Today':dt.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}))+'</h4>'+
+    (d.items.length?d.items.map(x=>'<div><span class="nm"><i class="dot" style="background:'+colorOf(x.sid)+'"></i><em>'+esc(nameOf(x.sid))+'</em></span><b>'+fmt(x.h)+'</b></div>').join(''):'<span class="empty">Free</span>')+'</div>'}).join(''):'<div class="empty">No plan yet. Add your subjects above and click Submit.</div>';
+  if(P.days.length>14)$('#days').insertAdjacentHTML('beforeend','<div class="empty" style="grid-column:1/-1">Showing the next 14 of '+P.days.length+' days. Later days update as you go.</div>');
+  $('#prog').innerHTML=S.subjects.length?S.subjects.map(s=>{const dn2=doneH(s.id),nd=need(s),p=Math.min(100,Math.round(dn2/nd*100)),left=dd(t,s.exam);
+    return '<div class="subj"><div class="top"><b><i class="dot" style="background:'+colorOf(s.id)+';display:inline-block;margin-right:8px"></i>'+esc(s.name)+'</b><span><small>'+(left<0?'Exam passed':left===0?'Exam today':left+' days left')+' · difficulty '+s.d+'</small><button class="x" data-id="'+s.id+'" aria-label="Remove '+esc(s.name)+'">×</button></span></div><div class="bar"><i style="width:'+p+'%"></i></div><small>'+fmt(dn2)+' of '+fmt(nd)+(s.h>0?'':' (estimated)')+' · '+p+'%'+(left>=1&&nd>dn2?' · needs '+fmt((nd-dn2)/left)+'/day':'')+(s.topics.length?' · Weak: '+esc(s.topics.join(', ')):'')+'</small></div>'}).join(''):'<div class="empty">No subjects yet.</div>';
+  $('#prog').querySelectorAll('.x').forEach(b=>b.onclick=()=>{S.subjects=S.subjects.filter(s=>s.id!=b.dataset.id);S.log=S.log.filter(l=>l.sid!=b.dataset.id);save();render()});
+}
+function toggle(x){
+  if(x.done)S.log=S.log.filter(l=>l.id!==x.lid);
+  else S.log.push({id:Date.now()+Math.random(),date:today(),sid:x.sid,h:x.h});
+  save();render();
+}
+function addRow(){
+  const d=document.createElement('div');d.className='srow';
+  d.innerHTML='<div class="rh"><b></b><button class="x" type="button" aria-label="Remove this subject">×</button></div><label>Subject name</label><input class="n" aria-label="Subject name" placeholder="e.g. Chemistry"><div class="row"><div><label>Exam date</label><input class="e" type="date" aria-label="Exam date"></div><div><label>Difficulty</label><select class="d" aria-label="Difficulty"><option value="1">1 – Easy</option><option value="2">2</option><option value="3" selected>3 – Medium</option><option value="4">4</option><option value="5">5 – Hard</option></select></div></div><label>Total hours needed (leave blank to estimate)</label><input class="h" type="number" min="1" step="0.5" aria-label="Total hours needed" placeholder="e.g. 12"><label>Difficult topics (comma separated)</label><input class="t" aria-label="Difficult topics" placeholder="e.g. Organic reactions, Equilibrium">';
+  d.querySelector('.x').onclick=()=>{if($('#rows').children.length>1){d.remove();renumber()}else toast('Keep at least one subject row.')};
+  $('#rows').appendChild(d);renumber();
+  return d;
+}
+function renumber(){[...$('#rows').children].forEach((r,i)=>r.querySelector('b').textContent='Subject '+(i+1))}
+$('#more').onclick=()=>{addRow().querySelector('.n').focus()};
+$('#submit').onclick=()=>{
+  const h=parseFloat($('#hours').value);
+  if(!(h>=0.5)){toast('Enter your daily study hours (at least 0.5).');return}
+  const add=[];let bad=0;
+  [...$('#rows').children].forEach(r=>{
+    const name=r.querySelector('.n').value.trim(),exam=r.querySelector('.e').value,tp=r.querySelector('.t').value.trim();
+    if(!name&&!exam&&!tp){r.style.borderColor='';return}
+    if(!name||!exam||dd(today(),exam)<1){bad++;r.style.borderColor='var(--warn)';return}
+    r.style.borderColor='';
+    const hn=parseFloat(r.querySelector('.h').value);
+    add.push({name,exam,h:hn>0?hn:null,d:+r.querySelector('.d').value,topics:tp.split(',').map(x=>x.trim()).filter(Boolean)});
+  });
+  if(bad){toast(bad+' subject(s) need a name and an exam date after today.');return}
+  if(!add.length&&!S.subjects.length){toast('Add at least one subject first.');return}
+  S.hours=h;
+  add.forEach((x,i)=>S.subjects.push({id:Date.now()+i,...x}));
+  $('#rows').innerHTML='';addRow();
+  save();render();
+  toast(add.length?add.length+' subject'+(add.length>1?'s':'')+' submitted. Timetable rebuilt.':'Daily hours updated. Timetable rebuilt.');
+  document.getElementById('days').scrollIntoView({behavior:'smooth',block:'center'});
+};
+$('#sample').onclick=()=>{S=seed();save();$('#hours').value=S.hours;$('#rows').innerHTML='';addRow();render();toast('Sample plan loaded.')};
+$('#reset').onclick=()=>{S=blank();save();$('#hours').value=S.hours;$('#rows').innerHTML='';addRow();render();toast('Everything cleared.')};
+let AC=null;
+function unlockAudio(){try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;AC=AC||new A();if(AC.state==='suspended')AC.resume()}catch(e){}}
+function chime(){
+  if(S.sound===false)return;unlockAudio();if(!AC)return;
+  for(let r=0;r<2;r++)[659,880,1047].forEach((f,i)=>{
+    const t0=AC.currentTime+r*1.2+i*0.22,o=AC.createOscillator(),g=AC.createGain();
+    o.type='sine';o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.35,t0+0.03);g.gain.exponentialRampToValueAtTime(0.0001,t0+0.6);
+    o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+0.65)});
+}
+function alertNow(msg){
+  toast(msg,10000);chime();
+  try{if('Notification' in window&&Notification.permission==='granted')new Notification('StudyWise',{body:msg,tag:'studywise'})}catch(x){}
+}
+function nstat(){
+  const el=$('#nstat');
+  if(!('Notification' in window)){el.textContent='This browser does not support notifications.';return}
+  const p=Notification.permission;
+  el.textContent=p==='granted'?'Browser notifications are allowed. Keep this tab open.':p==='denied'?'Browser notifications are blocked. Click the lock icon in the address bar to allow them.':'Notifications need your permission. Turn alerts on or press Test alert.';
+}
+function askPerm(cb){
+  if('Notification' in window&&Notification.permission==='default'){try{Notification.requestPermission().then(()=>{nstat();cb&&cb()}).catch(()=>cb&&cb());return}catch(x){}}
+  cb&&cb();
+}
+function armToday(){const n=new Date(),[h,m]=(S.remind||'18:00').split(':').map(Number);S.lastFired=(n.getHours()*60+n.getMinutes()>h*60+m)?today():''}
+$('#rt').onchange=e=>{S.remind=e.target.value;if(S.remOn)armToday();save()};
+$('#ron').onchange=e=>{S.remOn=e.target.checked;
+  if(S.remOn){unlockAudio();armToday();askPerm()}
+  save();nstat();toast(S.remOn?'Daily alert set for '+S.remind+'.':'Alerts off.')};
+$('#snd').onchange=e=>{S.sound=e.target.checked;save();if(S.sound)chime()};
+$('#test').onclick=()=>{unlockAudio();askPerm(()=>alertNow('Test: this is how your study alert will look and sound.'))};
+let tt;function toast(m,ms){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',ms||4500)}
+setInterval(()=>{
+  if(!S.remOn)return;
+  const n=new Date(),nm=n.getHours()*60+n.getMinutes(),[h,m]=(S.remind||'18:00').split(':').map(Number),rm=h*60+m;
+  if(nm>=rm&&nm-rm<=60&&S.lastFired!==today()){
+    S.lastFired=today();save();
+    const P=plan(),left=(P.days[0]?P.days[0].items.filter(x=>!x.done).reduce((a,x)=>a+x.h,0):0);
+    alertNow(left>0?'Time to study! '+fmt(left)+' left in today\'s plan.':'Today\'s goals are done. Nice work!');
+  }
+},10000);
+$('#hours').value=S.hours;addRow();
+render();nstat();
+</script>
+</body>
+</html>
